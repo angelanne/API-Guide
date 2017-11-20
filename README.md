@@ -42,7 +42,7 @@ class Product(models.Model):
     def __unicode__(self):
         return unicode(self.__str__())
 
-``
+```
 
 The serializer class for the Product model will be;
 
@@ -149,22 +149,23 @@ router.register(r'products', views.ProductViewSet)
 ```
 
 
-# The API URLs are now determined automatically by the router.
-# Additionally, we include the login URLs for the browsable API.
+The API URLs are now determined automatically by the router.
+Additionally, we include the login URLs for the browsable API.
 
-``sh
+```sh
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-prod/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
-``
+```
+
 ###Permissions and Authentication
 DRF handles authentication and permissions for you so you don't have to build an authentication system from scratch.
 Django provides support through the ``django.contrib.auth`` and ``django.contrib.sessions`` applications. These applications should be included in the settings file as shown below.
 
-``sh
+```sh
 
 INSTALLED_APPS = [
     
@@ -172,7 +173,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     ...
 ]
-``
+```
 
 Django also provides views for handling user authentication methods like login, logout, and password reset.
 
@@ -183,7 +184,7 @@ To improve authentication, DRF provides permission packages to ensure only autho
 Permission are first checked before any view is run. If permission check fails an ``exceptions.PermissionDenied`` or ``exceptions.NotAuthenticated`` exception will be raised.
 Here is how a typical view with permission looks like:
 
-``sh
+```sh
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -197,12 +198,12 @@ def permission(request, format=None):
     }
     return Response(result)
 
-``
+```
 
 ###Relationships and hyperlinked APIs.
 The HyperlinkedModelSerializer is a type of ModelSerializer  that represents relationships to other model instances with hyperlinks instead of primary key values. Using our Product model, here is how we write a hyperlinked serializer.
 
-``sh
+```sh
 
 #model.py
 class ProductCategory(models.Model):
@@ -232,7 +233,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         model = Product
         fields = ('id', 'category', 'price', 'name')
 
-``
+```
 
 
 ###Client libraries and schemas
@@ -242,12 +243,12 @@ Available schemas are the Core API and Core API client.
 
 Here is how to install the core API and Core API client:
 
-``sh
+```sh
 
 pip install coreapi
 pip install coreapi-cli
 
-``
+```
 
 ## Building a REST API with DRF.
 In this tutorial, we are going to build a simple eCommerce API.The API should have the ability to:
@@ -267,48 +268,48 @@ Let's get started.
 
 Create a directory where you will keep your project and also create a virtual environment to install the project dependencies.
 
-``sh
+```sh
 
 mkdir myprojects
 cd myprojects
 virtual venv
 
-``
+```
 
 Activate virtual environment
 
-``sh
+```sh
 source venv/bin/activate
-``
+```
 
 Install Django.
 
-``sh
+```sh
 
 pip install django
 
-``
+```
 
 This will install the latest version of Django which is 1.11 at the time of writing this tutorial.
 
 Create Django project.
 
-``sh
+```sh
 
 django-admin startproject ecommerceapp
 
-``
+```
 
 Install DRF using pip.
 
-``sh
+```sh
 
 pip install djangorestframework
 
-``
+```
  Let's go ahead add rest_framework to the list of installed apps in  settings file.
 
-``sh
+```sh
 
 #django_project/ecommerceapp/settings.py
 
@@ -325,20 +326,20 @@ INSTALLED_APPS = [
     'rest_framework', 
 ]
 
-``
+```
 
 Create the store application.
 
-``sh
+```sh
 
 cd ecommerceapp
 django-admin.py startapp store
 
-``
+```
 
 Add the store application to the list of installed apps in the ``settings.py`` file.
 
-``sh
+```sh
 
 #django_project/ecommerceapp/settings.py
 
@@ -355,7 +356,7 @@ INSTALLED_APPS = [
     'store', # add here
 ]
 
-``
+```
 Now the store application has integrated with the rest of the project.
 
 
@@ -366,7 +367,7 @@ Creating  models
 
 In the store directory, there is a ``models.py`` file, let's create models for our products.
 
-``sh
+```sh
 from __future__ import unicode_literals
 
 from django.db import models
@@ -385,25 +386,25 @@ class Products(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
-``
+```
 ####Migrations.
 Migrations provide a way of updating your database schema every time your models change without losing data.
 
 Create an initial migration for our products model, and sync the database for the first time.
 
-``sh
+```sh
 
 python manage.py make migrations products
 python manage.py migrate
 
-``
+```
 
 ###Serializing models
 As we mentioned in the beginning of this tutorial, serializers provide a way of changing data to a form that is easier understand, like JSON or XML. Deserialization does the opposite which is converting data to a form that can be saved to the database.
 
 In the store app directory, create a file ``serializers.py`` and add the following code.
 
-``sh
+```sh
 
 from rest_framework import serializers
 from store.models import Product
@@ -414,7 +415,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('id', 'name','price')
-``
+```
 
 
 Here we are using the ``ModelSerializer`` class provided by Django.
@@ -424,7 +425,7 @@ The ``created`` and ``updated`` fields are set to ``editable== False``, so by de
 ###Writing the Views
 Let's start writing some views, open ecommerceapp/store/views.py and start writing your views. We want to be able to add, view products, update and delete products. 
 
-``sh
+```sh
 
 from django.shortcuts import render
 from rest_framework import viewsets
@@ -435,17 +436,17 @@ from rest_framework.response import Response
 
 from .models import Products
 
-``
+```
 
 # Create your views here.
 
-``sh
+```sh
 
 class ProductsCreateView(generics.ListCreateAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
 
-``
+```
 
 The ``ProductsCreateView`` allows us to be able to view and add new products.
 
@@ -454,7 +455,7 @@ The ``ProductsCreateView`` allows us to be able to view and add new products.
 URL's enables us to interact with our API's.
 Create a file ``urls.py`` in your store directory. Add the following to it.
 
-``sh
+```sh
 
 from django.conf.urls import url
 from .views import ProductsCreateView
@@ -465,9 +466,9 @@ urlpatterns = [
     url(r'^products_list/$', ProductsCreateView.as_view()),
 
 ]
-``
+```
 
-Run 
+Run pplication
 Now issue the runserver command ``python manage.py runserver`` , navigate to ``http://127.0.0.1:8000/products/`` and see your URLs in action.
 
 As you can see you can be able to view all products and also add new products to your store.
@@ -475,7 +476,7 @@ As you can see you can be able to view all products and also add new products to
 Update and delete products
 Let's create a view that enables us to delete and update products.
 
-``sh
+```sh
 
 from rest_framework import generics
 
@@ -484,12 +485,12 @@ class ProductsDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
-``
+```
 
 The ``RetrieveUpdateDestroyAPIView`` we have used is a generic view that provides support for 'get, put, patch and delete method handlers.
 Update url's  as shown and don't forget to import the relevant views.
 
-``sh
+```sh
 
     from .views import ProductsCreateView, ProductsDetailsView
 
@@ -500,7 +501,7 @@ Update url's  as shown and don't forget to import the relevant views.
 
     ]
 
-``
+```
 
 
 Now navigate to ``http://127.0.0.1:8000/store/products_list/1/`` and you should be able to update the details of the given product or delete it altogether
