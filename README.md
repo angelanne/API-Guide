@@ -372,7 +372,9 @@ psql
 ```
 Create bucketlist database
 
+```sh
 CREATE DATABASE ecommerce;
+```
 Create role
 ```sh
 CREATE ROLE linode  WITH LOGIN PASSWORD 'asdfgh';
