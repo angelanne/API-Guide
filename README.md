@@ -90,7 +90,7 @@ return Response(data)
 ### Class-based Views
 REST framework provides an APIView class, which subclasses Django's View class.This class works well with the Request instances and also catches exceptions accordingly.
 
-Let's create a view for adding a new product.
+Let's create a view for viewing products.
 
 ```sh 
 
@@ -201,7 +201,7 @@ The HyperlinkedModelSerializer is a type of ModelSerializer  that represents rel
 
 ```sh
 
-#model.py
+#models.py
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100, unique=True, db_index=True)
     
@@ -212,7 +212,7 @@ class Product(models.Model):
     name = models.CharField(max_length=300, unique=True, db_index=True)
     
 
-#serializer.py
+#serializers.py
 
 class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
 
@@ -250,7 +250,7 @@ pip install coreapi-cli
 In this tutorial, we are going to build a simple eCommerce API.The API should have the ability to:
 
 * Create a product
-* Retrieve a product
+* View products
 * Update and delete a product.
 
 
@@ -359,7 +359,8 @@ Now the store application has integrated with the rest of the project.
 Setting up Database for an eCommerce project.
 We are going to use PostgreSQL database because its more stable.
 
-####Create Database and User
+#### Create Database and User
+
 Create database ``ecommerce`` and assign a user.
 Switch over to the Postgres account on your machine by typing:
 
@@ -370,7 +371,7 @@ Access a Postgres prompt:
 ```sh
 psql
 ```
-Create bucketlist database
+Create database
 
 ```sh
 CREATE DATABASE ecommerce;
@@ -397,9 +398,9 @@ Edit the currently configured SQLite database and use the Postgres database.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myproject',
-        'USER': 'myprojectuser',
-        'PASSWORD': 'password',
+        'NAME': 'ecommerce',
+        'USER': 'linode',
+        'PASSWORD': 'asdfgh',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -408,7 +409,7 @@ DATABASES = {
 . . .
 ```
 
-Creating  models
+#### Creating  models
 
 In the store directory, there is a ``models.py`` file, let's create models for our products.
 
@@ -423,13 +424,16 @@ from django.db import models
 class Products(models.Model):
     price = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    name = models.CharField(max_length=300, unique=True)
+    name = models.CharField(max_length=300)
+    decription = models.CharField(max_length=1000)
     removed = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
+        """Return a readable object of the model instance."""
         return "{}".format(self.name)
+
 
 ```
 #### Migrations.
@@ -452,14 +456,16 @@ In the store app directory, create a file ``serializers.py`` and add the followi
 ```sh
 
 from rest_framework import serializers
-from store.models import Product
+from .models import Products
 
 
 class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Product
-        fields = ('id', 'name','price')
+        model = Products
+        fields = ('id', 'name', 'price', 'decription')
+      
+
 ```
 
 
@@ -468,7 +474,7 @@ The ``created`` and ``updated`` fields are set to ``editable== False``, so by de
 
 
 ### Writing the Views
-Let's start writing some views, open ecommerceapp/store/views.py and start writing your views. We want to be able to add, view products, update and delete products. 
+Open ecommerceapp/store/views.py and start writing your views. We want to be able to add, view products, update and delete a product. 
 
 ```sh
 
@@ -509,11 +515,9 @@ urlpatterns = [
 ```
 
 Run pplication
-Now issue the runserver command ``python manage.py runserver`` , navigate to ``http://127.0.0.1:8000/products/`` and see your URLs in action.
+Now issue the runserver command ``python manage.py runserver`` , navigate to ``http://127.0.0.1:8000/products/``.As you can see you can be able to view all products as well as add new products to your store.
 
-As you can see you can be able to view all products and also add new products to your store.
-
-Update and delete products
+#### Update and delete products
 Let's create a view that enables us to delete and update products.
 
 ```sh
