@@ -1,15 +1,15 @@
-#Django Api Guide
+# Django Api Guide
 
 Django REST framework is a powerful and flexible toolkit for building Web API's. Its browsable API is one of the features that make it superior to other frameworks. 
 
-###Requirements
+### Requirements
 
 REST framework requires the following:
 
  * Python 
  * Django 
 
-###Installation
+### Installation
 Installing DRF is as simple as:
 
 ```sh 
@@ -17,11 +17,11 @@ Installing DRF is as simple as:
 pip install djangorestframework
 
 ```
-##How Django Rest framework works
+## How Django Rest framework works
 
 The following are the building blocks that make up the Django Framework.
 
-###Serializers
+### Serializers
 Serializers allow querysets and model instances to be converted to native Python datatypes that can then be easily rendered into JSON, XML or other content types.
 
 Let's assume we have a  Product model instance as shown below:
@@ -111,7 +111,7 @@ class ListProducts(APIView):
         return Response(products)
 ```
 
-###Viewsets and routers
+### Viewsets and routers
 
 ViewSet classes provide operations such as read, or update, and not method handlers such as get or put.
 Let's create a viewset for viewing our products.
@@ -137,11 +137,7 @@ from django.conf.urls import url, include
 from products import views
 from rest_framework.routers import DefaultRouter
 
-```
-
-# Create a router and register our viewsets with it.
-
-```sh 
+#Create a router and register our viewsets with it.
 
 router = DefaultRouter()
 router.register(r'products', views.ProductViewSet)
@@ -161,7 +157,7 @@ urlpatterns = [
 
 ```
 
-###Permissions and Authentication
+### Permissions and Authentication
 DRF handles authentication and permissions for you so you don't have to build an authentication system from scratch.
 Django provides support through the ``django.contrib.auth`` and ``django.contrib.sessions`` applications. These applications should be included in the settings file as shown below.
 
@@ -200,7 +196,7 @@ def permission(request, format=None):
 
 ```
 
-###Relationships and hyperlinked APIs.
+### Relationships and hyperlinked APIs.
 The HyperlinkedModelSerializer is a type of ModelSerializer  that represents relationships to other model instances with hyperlinks instead of primary key values. Using our Product model, here is how we write a hyperlinked serializer.
 
 ```sh
@@ -236,7 +232,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 ```
 
 
-###Client libraries and schemas
+### Client libraries and schemas
 A schema is a machine-readable document that describes the available API endpoints, their URLs, and what operations they support.
 
 Available schemas are the Core API and Core API client.
@@ -258,7 +254,7 @@ In this tutorial, we are going to build a simple eCommerce API.The API should ha
 * Update and delete a product.
 
 
-###Requirements
+### Requirements
 
 * Django
 * Python
@@ -387,7 +383,7 @@ class Products(models.Model):
         return "{}".format(self.name)
 
 ```
-####Migrations.
+#### Migrations.
 Migrations provide a way of updating your database schema every time your models change without losing data.
 
 Create an initial migration for our products model, and sync the database for the first time.
@@ -399,7 +395,7 @@ python manage.py migrate
 
 ```
 
-###Serializing models
+### Serializing models
 As we mentioned in the beginning of this tutorial, serializers provide a way of changing data to a form that is easier understand, like JSON or XML. Deserialization does the opposite which is converting data to a form that can be saved to the database.
 
 In the store app directory, create a file ``serializers.py`` and add the following code.
@@ -422,7 +418,7 @@ Here we are using the ``ModelSerializer`` class provided by Django.
 The ``created`` and ``updated`` fields are set to ``editable== False``, so by default, they are read_only_fields.
 
 
-###Writing the Views
+### Writing the Views
 Let's start writing some views, open ecommerceapp/store/views.py and start writing your views. We want to be able to add, view products, update and delete products. 
 
 ```sh
@@ -433,14 +429,9 @@ from rest_framework.views import APIView
 from .serializers import ProductSerializer
 from rest_framework import generics
 from rest_framework.response import Response
-
 from .models import Products
 
-```
-
 # Create your views here.
-
-```sh
 
 class ProductsCreateView(generics.ListCreateAPIView):
     queryset = Products.objects.all()
@@ -451,7 +442,7 @@ class ProductsCreateView(generics.ListCreateAPIView):
 The ``ProductsCreateView`` allows us to be able to view and add new products.
 
 
-###Configuring URLs
+### Configuring URLs
 URL's enables us to interact with our API's.
 Create a file ``urls.py`` in your store directory. Add the following to it.
 
@@ -506,13 +497,13 @@ Update url's  as shown and don't forget to import the relevant views.
 
 Now navigate to ``http://127.0.0.1:8000/store/products_list/1/`` and you should be able to update the details of the given product or delete it altogether
 
-####Adding a Product
+#### Adding a Product
 
 
 #### Viewing Products
 
 
-####Deleting and Updating a Product
+#### Deleting and Updating a Product
 
 
 
