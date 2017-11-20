@@ -246,7 +246,7 @@ pip install coreapi-cli
 
 ```
 
-## Building a REST API with DRF.
+## Building a REST API with Django Rest Framework.
 In this tutorial, we are going to build a simple eCommerce API.The API should have the ability to:
 
 * Create a product
@@ -357,7 +357,54 @@ Now the store application has integrated with the rest of the project.
 
 
 Setting up Database for an eCommerce project.
-We are going to use postgress database because its more robust.
+We are going to use PostgreSQL database because its more stable.
+
+####Create Database and User
+Create database ``ecommerce`` and assign a user.
+Switch over to the Postgres account on your machine by typing:
+
+```sh
+sudo su postgres
+```
+Access a Postgres prompt: 
+```sh
+psql
+```
+Create bucketlist database
+
+CREATE DATABASE ecommerce;
+Create role
+```sh
+CREATE ROLE linode  WITH LOGIN PASSWORD 'asdfgh';
+```
+Grant access to the the user ``linode``
+
+```sh
+GRANT ALL PRIVILEGES ON DATABASE bucketlist TO linode;
+```
+Install the psycopg2 package that will allow us to use the database we configured:
+
+```sh
+pip install psycopg2
+```
+Edit the currently configured SQLite database and use the Postgres database.
+
+```sh
+. . .
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myproject',
+        'USER': 'myprojectuser',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+. . .
+```
 
 Creating  models
 
