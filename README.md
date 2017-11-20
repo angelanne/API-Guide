@@ -553,6 +553,7 @@ Now navigate to ``http://127.0.0.1:8000/store/products_list/1/`` and you should 
 #### Adding a Product
 
 
+
 #### Viewing Products
 
 
